@@ -9,7 +9,9 @@
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![GitHub stars](https://img.shields.io/github/stars/bisovka-labs/claude-recents-cleaner?style=social)](https://github.com/bisovka-labs/claude-recents-cleaner/stargazers)
 
-If you've reorganized, renamed, or deleted project folders, the **Recent** picker in Claude desktop keeps showing the old names — sometimes dozens of them. This is a tiny Python script that removes the stale entries so the dropdown reflects what actually exists on your disk. Backs everything up to a tarball before deleting, so any cleanup is reversible.
+**Claude Recents Cleaner is a small Python CLI that removes ghost folders — paths to deleted, renamed, or moved projects — from the Claude desktop app's Recent project picker on macOS, Linux, and Windows. It runs on stdlib-only Python 3.8+ and backs every removed session up to a timestamped tarball before deleting, so any cleanup is reversible.**
+
+If you've reorganized, renamed, or deleted project folders, the **Recent** picker in Claude desktop keeps showing the old names — sometimes dozens of them. This tool fixes that.
 
 <table>
   <tr>
@@ -40,6 +42,20 @@ python3 clean-claude-recents.py --dry-run
 The Claude desktop app's `Code` tab — "New session → folder picker" — shows a **Recent** list of projects you've worked in. Over time, as you rename folders, delete old prototypes, or clean up `.claude/worktrees/...`, that list fills up with ghosts — paths to folders that no longer exist. Clicking one shows "folder not found" or simply does nothing.
 
 The desktop app does not currently provide a UI to remove individual entries from the Recent list, and quitting and relaunching does not clear them either.
+
+## Common ghost folder patterns
+
+The session metadata that backs the Recent dropdown is written once per project and never garbage-collected. The most common ghosts the cleaner removes:
+
+1. **Deleted prototype folders** — quick experiments under `~/Desktop/`, `~/scratch/`, or `~/tmp/` that you `rm -rf`'d months ago.
+2. **Renamed or moved projects** — the original path stays in Recent forever; the new path appears as a separate, additional entry.
+3. **Removed `git worktree` paths** — anything under `.claude/worktrees/` that `git worktree remove` cleaned up but Claude still remembers.
+4. **Unmounted drives and network shares** — projects you opened from a USB stick, an external SSD, or a mounted SMB share that isn't connected right now.
+5. **Symlinks to deleted targets** — a Claude session opened via a symlink whose target you later removed.
+6. **Cleaned-up monorepo sub-paths** — you opened a single package inside a monorepo, then restructured; the old sub-path lingers.
+7. **Test or fixture directories** — temporary folders created by test runs that wrote a Claude session for debugging.
+
+Run with `--dry-run` first to see which of these the cleaner found on your machine.
 
 ## How the Recent list is actually stored
 
@@ -136,6 +152,18 @@ tar -xzf ~/claude-recents-backup-YYYYMMDD-HHMMSS.tar.gz \
 ```
 
 ## FAQ
+
+**How do I clear the Recent projects list in Claude desktop?**
+Quit Claude.app completely (`Cmd+Q` on macOS, not just close the window), then run `claude-recents-cleaner` (Homebrew install) or `python3 clean-claude-recents.py` from this repo. The script removes session entries for folders that no longer exist on disk and writes a timestamped `.tar.gz` backup to `$HOME` first. Relaunch Claude; the dropdown reflects the cleaned state.
+
+**Where does Claude Code store the Recent dropdown data?**
+In a per-OS application-support directory: `~/Library/Application Support/Claude/claude-code-sessions/` on macOS, `~/.config/Claude/claude-code-sessions/` on Linux, and `%APPDATA%\Claude\claude-code-sessions\` on Windows. Each project session is one `local_<uuid>.json` file recording the project's `cwd`, title, model, and timestamps. The Recent dropdown dedupes these by `cwd` and renders the basename.
+
+**Why does Claude desktop show folders that no longer exist?**
+The desktop app writes a session metadata file the first time you open a project and never removes it, even after you delete or rename the folder. The Recent dropdown enumerates every file it finds, so deleted prototypes, renamed paths, and removed `git worktree` directories keep showing up indefinitely.
+
+**How do I remove worktree paths from Claude's Recent list?**
+Same flow as any other ghost: quit Claude.app, run the cleaner. Worktrees under `.claude/worktrees/` that you removed with `git worktree remove` leave behind session metadata pointing at the no-longer-existing path; the cleaner detects them by checking that `cwd` exists on disk and removes them like any other stale entry.
 
 **Will this delete my chat history?**
 No. This tool removes session *metadata* (cwd, title, model, timestamps) from the desktop app's directory. The conversation transcripts themselves live in `~/.claude/projects/<flattened-path>/<session-id>.jsonl` and are untouched.

@@ -17,6 +17,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Smoke test (`tests/test_smoke.py`) covering dry-run, stale-folder removal,
   age-based removal, and backup creation in a temporary sessions directory.
 - `.github/FUNDING.yml`.
+- `llms.txt` at repo root following the Answer.AI proposed standard, so AI
+  assistants crawling the repo get a curated map of documentation and a
+  citation policy.
+- README: canonical-form lead paragraph for AI-search extractability.
+- README: `Common ghost folder patterns` section enumerating the seven
+  ghost-source patterns the cleaner removes.
+- README FAQ: search-vocabulary entries ("How do I clear the Recent projects
+  list in Claude desktop?", "Where does Claude Code store the Recent
+  dropdown data?", "Why does Claude desktop show folders that no longer
+  exist?", "How do I remove worktree paths from Claude's Recent list?").
 
 ## [0.1.0] - 2026-05-23
 
