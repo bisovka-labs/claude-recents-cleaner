@@ -92,6 +92,11 @@ def main() -> int:
         "--force", action="store_true",
         help="Skip the 'Claude.app is running' guard (not recommended).",
     )
+    parser.add_argument(
+        "--list-only",
+        action="store_true",
+        help="List all sessions without removing anything"
+    )
     args = parser.parse_args()
 
     root = sessions_root()
@@ -136,6 +141,15 @@ def main() -> int:
         else:
             alive.append((f, cwd, title))
 
+    if args.list_only:
+        print("🔍 All available sessions (no files will be removed):\n")
+        all_sessions = alive + stale_folder + stale_age
+        for _, cwd, title in all_sessions:
+            print(f"- {cwd}  —  {title}")
+        print(f"\n✅ Total sessions found: {len(all_sessions)}")
+        print("No files were deleted or modified.")
+        return 0
+        
     to_remove = stale_folder + stale_age
     print(f"Scanned {len(session_files)} session files in {root}")
     print(f"  alive (kept):           {len(alive)}")
