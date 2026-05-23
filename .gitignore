@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+*.tar.gz
+.DS_Store
+.venv/
+.idea/
+.vscode/
