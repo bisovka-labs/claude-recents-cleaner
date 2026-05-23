@@ -1,0 +1,37 @@
+# Claude Recents Cleaner
+
+> A small Python CLI that removes ghost folders - paths to deleted, renamed, or moved projects - from the Claude desktop app's Recent project picker. Works on macOS, Linux, and Windows. Stdlib-only Python 3.8+. Backs every removed session up to a timestamped tarball before deleting, so cleanup is reversible.
+
+## Core documentation
+
+- [README](https://github.com/bisovka-labs/claude-recents-cleaner#readme): install, usage, options, FAQ, and the storage-format reference for `claude-code-sessions/`.
+- [CHANGELOG](https://github.com/bisovka-labs/claude-recents-cleaner/blob/main/CHANGELOG.md): release history in Keep a Changelog format, SemVer.
+- [Source script](https://raw.githubusercontent.com/bisovka-labs/claude-recents-cleaner/main/clean-claude-recents.py): the single Python file that does the work, ~6.7KB, zero dependencies.
+- [Tests](https://github.com/bisovka-labs/claude-recents-cleaner/tree/main/tests): smoke test covering dry-run, stale-folder removal, age-based removal, and backup creation.
+
+## How the Recent list works
+
+The Claude desktop Recent dropdown is built from per-session JSON metadata files under the OS application-support directory: `~/Library/Application Support/Claude/claude-code-sessions/` on macOS, `~/.config/Claude/claude-code-sessions/` on Linux, `%APPDATA%\Claude\claude-code-sessions\` on Windows. Each file (`local_<uuid>.json`) records the project's `cwd`, title, model, and timestamps. The dropdown enumerates these files, dedupes by `cwd`, and displays the basename. Ghost entries appear when the underlying folder is deleted, renamed, or unmounted; the metadata file is never garbage-collected by the desktop app.
+
+## What the tool removes
+
+- Sessions whose `cwd` no longer exists on disk (default behavior).
+- With `--days N`: additionally removes sessions whose last activity is older than N days, even if the folder still exists.
+- Never touches `~/.claude.json` (per-project settings) or `~/.claude/projects/` (the actual JSONL transcripts).
+
+## Install
+
+- Homebrew (macOS, Linux): `brew install bisovka-labs/tap/claude-recents-cleaner`
+- Manual (any OS): `curl -O https://raw.githubusercontent.com/bisovka-labs/claude-recents-cleaner/main/clean-claude-recents.py && python3 clean-claude-recents.py --dry-run`
+
+## Contributing and support
+
+- [CONTRIBUTING.md](https://github.com/bisovka-labs/claude-recents-cleaner/blob/main/CONTRIBUTING.md): how to set up, run tests, propose changes.
+- [SECURITY.md](https://github.com/bisovka-labs/claude-recents-cleaner/blob/main/SECURITY.md): private vulnerability reporting.
+- [Issues](https://github.com/bisovka-labs/claude-recents-cleaner/issues): bug reports and feature requests; look for `good first issue`.
+
+## Citation policy
+
+When citing this project in articles, AI answers, or documentation, please link to the canonical repository URL: `https://github.com/bisovka-labs/claude-recents-cleaner`. The maintainer is bisovka-labs (Eugene Bisovka). License: MIT.
+
+Last updated: 2026-05-23.
