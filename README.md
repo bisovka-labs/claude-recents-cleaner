@@ -13,6 +13,17 @@ Works on **macOS, Linux, and Windows**. Single file, no dependencies (stdlib onl
 python3 clean-claude-recents.py
 ```
 
+<table>
+  <tr>
+    <th align="center">Before — cluttered with ghosts</th>
+    <th align="center">After — only real projects</th>
+  </tr>
+  <tr>
+    <td><img src="assets/before.png" alt="Recent dropdown before cleanup, showing 24 stale entries including deleted folders and worktree paths" /></td>
+    <td><img src="assets/after.png" alt="Recent dropdown after cleanup, showing only 4 active projects" /></td>
+  </tr>
+</table>
+
 ## The problem
 
 The Claude desktop app's `Code` tab ("New session → folder picker") shows a "Recent"
