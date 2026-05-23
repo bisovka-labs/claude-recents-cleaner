@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Claude Recents Cleaner — Open Graph image</title>
+<style>
+  :root {
+    --bg: #0b0d12;
+    --bg2: #1a1f2e;
+    --fg: #ffffff;
+    --accent: #d97757; /* Anthropic Claude orange-ish */
+    --muted: #8a92a8;
+    --ghost: rgba(255,255,255,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1280px; height: 640px; background: var(--bg); overflow: hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", Arial, sans-serif;
+    color: var(--fg);
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    background:
+      radial-gradient(1100px 700px at 90% 110%, #1f2638 0%, transparent 60%),
+      radial-gradient(900px 600px at -10% -10%, #1a1f2e 0%, transparent 55%),
+      var(--bg);
+    position: relative;
+  }
+  .left {
+    padding: 78px 0 78px 88px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 28px;
+    z-index: 2;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-feature-settings: "ss01";
+  }
+  .badge::before {
+    content: "";
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 22px var(--accent);
+  }
+  h1 {
+    font-size: 78px;
+    line-height: 1.04;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+  }
+  h1 .ghost {
+    font-size: 86px;
+    margin-right: 10px;
+    vertical-align: -6px;
+    filter: drop-shadow(0 0 20px rgba(255,255,255,0.45));
+  }
+  p.tag {
+    font-size: 30px;
+    line-height: 1.4;
+    color: var(--muted);
+    max-width: 640px;
+    font-weight: 400;
+  }
+  p.tag strong { color: var(--fg); font-weight: 600; }
+  .footrow {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    margin-top: 12px;
+    font-size: 20px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .footrow .chip {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--fg);
+    padding: 8px 16px;
+    border-radius: 999px;
+  }
+  .footrow .repo {
+    color: var(--accent);
+    font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace;
+    font-weight: 500;
+  }
+
+  /* Right panel — mock dropdown */
+  .right {
+    position: relative;
+    padding: 56px 64px 56px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+  .panel {
+    width: 460px;
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    box-shadow:
+      0 12px 28px rgba(0,0,0,0.45),
+      0 0 0 1px rgba(255,255,255,0.04) inset;
+    padding: 18px 0;
+    overflow: hidden;
+  }
+  .panel .head {
+    padding: 0 22px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 14px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 22px;
+    font-size: 19px;
+    line-height: 1;
+  }
+  .row .folder {
+    font-size: 22px;
+  }
+  .row .text {
+    flex: 1;
+    font-family: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  .row.ghost {
+    color: var(--ghost);
+    text-decoration: line-through;
+    text-decoration-color: rgba(255,255,255,0.25);
+    text-decoration-thickness: 1.5px;
+  }
+  .row.ghost .folder { opacity: 0.5; }
+  .row.alive {
+    color: var(--fg);
+  }
+  .row.alive .folder { color: var(--accent); }
+  .divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 8px 22px;
+  }
+  .arrow {
+    position: absolute;
+    top: 50%;
+    left: -22px;
+    transform: translateY(-50%);
+    font-size: 56px;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(217, 119, 87, 0.4);
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+  <div class="left">
+    <div class="badge">bisovka-labs / claude-recents-cleaner</div>
+    <h1><span class="ghost">👻</span>Recents,<br/>but cleaner.</h1>
+    <p class="tag">
+      Removes <strong>ghost folders</strong> from Claude desktop's Recent project picker.<br/>
+      One Python script. macOS, Linux, Windows. Zero dependencies.
+    </p>
+    <div class="footrow">
+      <span class="chip">MIT</span>
+      <span class="chip">Python 3.8+</span>
+      <span class="chip">brew install</span>
+    </div>
+    <div class="footrow">
+      <span class="repo">github.com/bisovka-labs/claude-recents-cleaner</span>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="panel">
+      <div class="head">Recent projects</div>
+      <div class="row ghost"><span class="folder">📁</span><span class="text">~/old-experiments/draft-a</span></div>
+      <div class="row ghost"><span class="folder">📁</span><span class="text">~/projects/abandoned</span></div>
+      <div class="row ghost"><span class="folder">📁</span><span class="text">~/.claude/worktrees/PR-117</span></div>
+      <div class="row ghost"><span class="folder">📁</span><span class="text">~/tmp/sandbox-2025-04</span></div>
+      <div class="divider"></div>
+      <div class="row alive"><span class="folder">📁</span><span class="text">~/projects/saola</span></div>
+      <div class="row alive"><span class="folder">📁</span><span class="text">~/projects/bisovka-labs</span></div>
+      <div class="row alive"><span class="folder">📁</span><span class="text">~/projects/atamura</span></div>
+    </div>
+  </div>
+</body>
+</html>
