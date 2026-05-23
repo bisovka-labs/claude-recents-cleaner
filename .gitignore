@@ -3,5 +3,7 @@ __pycache__/
 *.tar.gz
 .DS_Store
 .venv/
+.testenv/
+.pytest_cache/
 .idea/
 .vscode/
