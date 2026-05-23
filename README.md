@@ -9,8 +9,13 @@ actually exists on your disk.
 
 Works on **macOS, Linux, and Windows**. Single file, no dependencies (stdlib only).
 
-```
-python3 clean-claude-recents.py
+```bash
+# macOS / Linux
+brew install bisovka-labs/tap/claude-recents-cleaner
+claude-recents-cleaner --dry-run
+
+# Or run the script directly
+python3 clean-claude-recents.py --dry-run
 ```
 
 <table>
@@ -74,15 +79,27 @@ the transcript is still on disk and `claude --resume <session-id>` can open it.
 
 ## Install
 
+### Homebrew (macOS, Linux)
+
+```bash
+brew install bisovka-labs/tap/claude-recents-cleaner
 ```
+
+Then run it as `claude-recents-cleaner` from anywhere.
+
+### Manual (any platform)
+
+```bash
 git clone https://github.com/bisovka-labs/claude-recents-cleaner.git
 cd claude-recents-cleaner
+python3 clean-claude-recents.py --dry-run
 ```
 
-Or download the single script:
+Or download just the script:
 
-```
+```bash
 curl -O https://raw.githubusercontent.com/bisovka-labs/claude-recents-cleaner/main/clean-claude-recents.py
+python3 clean-claude-recents.py --dry-run
 ```
 
 Requires Python 3.8+. No third-party packages.
