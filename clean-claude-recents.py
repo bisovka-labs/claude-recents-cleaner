@@ -97,6 +97,11 @@ def main() -> int:
         action="store_true",
         help="List all sessions without removing anything"
     )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Output in JSON format (use with --list-only)"
+    )
     args = parser.parse_args()
 
     root = sessions_root()
@@ -142,12 +147,41 @@ def main() -> int:
             alive.append((f, cwd, title))
 
     if args.list_only:
-        print("🔍 All available sessions (no files will be removed):\n")
-        all_sessions = alive + stale_folder + stale_age
-        for _, cwd, title in all_sessions:
-            print(f"- {cwd}  —  {title}")
-        print(f"\n✅ Total sessions found: {len(all_sessions)}")
-        print("No files were deleted or modified.")
+        all_sessions = []
+
+        for lst, status in [(alive, "ALIVE"), (stale_folder, "STALE"), (stale_age, "STALE")]:
+            for f, cwd, title in lst:
+                try:
+                    with open(f) as fp:
+                        data = json.load(fp)
+                    last_ts = data.get("lastActivityAt") or data.get("createdAt", 0)
+                except:
+                    last_ts = 0
+
+                all_sessions.append({
+                    "lastActivityAt": last_ts,
+                    "status": status,
+                    "cwd": cwd,
+                    "title": title
+                })
+
+        all_sessions.sort(key=lambda x: x["lastActivityAt"], reverse=True)
+
+        if args.json:
+            import json
+            print(json.dumps(all_sessions, indent=2))
+            return 0
+
+        for item in all_sessions:
+            ts = item["lastActivityAt"]
+            date_str = time.strftime("%Y-%m-%d", time.localtime(ts / 1000)) if ts else "unknown"
+            status = item["status"]
+            cwd = item["cwd"] or "(no path)"
+            title = item["title"] or "(untitled)"
+            print(f"{date_str}  {status:6}  {cwd:30}  {title}")
+
+        print(f"\nTotal sessions: {len(all_sessions)}")
+        print("No files removed, no backup created.")
         return 0
         
     to_remove = stale_folder + stale_age
