@@ -1,0 +1,48 @@
+name: Feature request
+description: Suggest a new flag, option, or behavior.
+title: "[feature] "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening a feature request, please skim existing issues — the
+        idea may already be tracked.
+
+        Note the project's design constraint: single-file Python script,
+        stdlib only. Features that would require a new dependency usually
+        belong in a separate companion script.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: |
+        Describe the workflow or pain point. Concrete examples > abstract
+        wishlists.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed shape
+      description: |
+        What flag, option, or behavior would solve it? Example invocations are
+        very welcome.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: |
+        What did you try before opening this issue? Manual cleanup, other
+        tools, a shell one-liner?
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Design constraints
+      options:
+        - label: My proposal keeps the script single-file and stdlib-only.
+          required: false
+        - label: My proposal would require a new third-party dependency (which is OK to discuss but probably belongs in a companion script).
+          required: false

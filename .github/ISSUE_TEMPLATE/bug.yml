@@ -1,0 +1,68 @@
+name: Bug report
+description: The cleaner didn't work the way you expected.
+title: "[bug] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please fill in the details below — they make
+        fixing the issue much faster.
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS
+        - Linux
+        - Windows
+    validations:
+      required: true
+  - type: input
+    id: os_version
+    attributes:
+      label: OS version
+      description: e.g. macOS 14.5, Ubuntu 22.04, Windows 11 23H2
+    validations:
+      required: true
+  - type: input
+    id: claude_version
+    attributes:
+      label: Claude desktop version
+      description: From Help → About in the app (e.g. 1.8555.0).
+    validations:
+      required: true
+  - type: input
+    id: python_version
+    attributes:
+      label: Python version
+      description: Output of `python3 --version`.
+    validations:
+      required: true
+  - type: textarea
+    id: dry_run
+    attributes:
+      label: Dry-run output
+      description: |
+        Paste the full output of `python3 clean-claude-recents.py --dry-run`.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened
+      description: |
+        What did you expect to happen, and what happened instead? If the script
+        crashed, paste the full traceback.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Pre-flight
+      options:
+        - label: I quit Claude.app fully (Cmd+Q on macOS) before running the cleaner.
+          required: false
+        - label: I tried `--dry-run` first.
+          required: false
