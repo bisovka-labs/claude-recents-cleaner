@@ -22,7 +22,7 @@ If you've reorganized, renamed, or deleted project folders, the **Recent** picke
   </tr>
 </table>
 
-> **Tip:** an animated GIF demo is on the roadmap — see [#5](https://github.com/bisovka-labs/claude-recents-cleaner/issues/5). PRs welcome.
+> **Tip:** an animated GIF demo is on the roadmap — see [#4](https://github.com/bisovka-labs/claude-recents-cleaner/issues/4). PRs welcome.
 
 ## Quick start
 
