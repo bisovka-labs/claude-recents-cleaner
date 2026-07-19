@@ -42,7 +42,15 @@ def sessions_root() -> Path:
     if system == "Darwin":
         return HOME / "Library" / "Application Support" / "Claude" / "claude-code-sessions"
     if system == "Linux":
-        return HOME / ".config" / "Claude" / "claude-code-sessions"
+        candidates = [
+            HOME / ".config" / "Claude" / "claude-code-sessions",
+            HOME / ".var" / "app" / "com.anthropic.Claude" / "config" / "Claude" / "claude-code-sessions",
+            HOME / "snap" / "claude" / "current" / ".config" / "Claude" / "claude-code-sessions",
+        ]
+        for candidate in candidates:
+            if candidate.is_dir():
+                return candidate
+        return candidates[0]
     if system == "Windows":
         appdata = os.environ.get("APPDATA")
         if appdata:

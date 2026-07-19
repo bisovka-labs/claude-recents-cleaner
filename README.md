@@ -48,7 +48,7 @@ The dropdown is built from one JSON file per session, stored under your operatin
 | OS | Path |
 |---|---|
 | macOS | `~/Library/Application Support/Claude/claude-code-sessions/` |
-| Linux | `~/.config/Claude/claude-code-sessions/` |
+| Linux | Standard: `~/.config/Claude/claude-code-sessions/`; also detects Flatpak and Snap sandbox paths when present. |
 | Windows | `%APPDATA%\Claude\claude-code-sessions\` |
 
 Each file (`local_<uuid>.json`) records the project's `cwd`, a title, the model used, and timestamps. The Recent dropdown enumerates these files, dedupes by `cwd`, and shows the basename.
@@ -153,7 +153,9 @@ Not safely, because the desktop app may overwrite metadata on session-state chan
 Different storage entirely (server-side conversations on claude.ai). This tool is strictly for the Claude desktop app's project-folder picker.
 
 **Does this support Claude desktop on Linux Flatpak / Windows Store?**
-The Linux path assumes the standard `~/.config/Claude/...` location used by the official `.deb` / `.AppImage` builds. Flatpak/Snap may sandbox the data into a different directory — if you run into that, please open an issue with the actual path so we can add it.
+On Linux, the script checks the standard `~/.config/Claude/...` location first,
+then detects the Flatpak and Snap sandbox locations when they exist. Windows
+Store remains unverified; please open an issue with its actual session path.
 
 ## Contributing
 

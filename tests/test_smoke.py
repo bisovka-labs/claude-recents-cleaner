@@ -7,6 +7,7 @@ tarball into the tmp dir. No real Claude install or user state is touched.
 from __future__ import annotations
 
 import json
+import importlib.util
 import os
 import platform
 import subprocess
@@ -18,6 +19,15 @@ from pathlib import Path
 import pytest
 
 SCRIPT = Path(__file__).resolve().parent.parent / "clean-claude-recents.py"
+
+
+def load_script_module():
+    """Load the single-file script so platform path selection can be tested."""
+    spec = importlib.util.spec_from_file_location("clean_claude_recents", SCRIPT)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def sessions_dir_for(home: Path) -> Path:
@@ -62,6 +72,36 @@ def test_no_sessions_dir(tmp_path: Path) -> None:
     r = run_script(tmp_path)
     assert r.returncode == 0
     assert "not found" in r.stdout.lower() or "nothing to clean" in r.stdout.lower()
+
+
+def test_linux_sessions_root_uses_sandbox_paths_when_present(tmp_path: Path, monkeypatch) -> None:
+    module = load_script_module()
+    flatpak_sessions = (
+        tmp_path / ".var" / "app" / "com.anthropic.Claude" / "config"
+        / "Claude" / "claude-code-sessions"
+    )
+    flatpak_sessions.mkdir(parents=True)
+
+    monkeypatch.setattr(module, "HOME", tmp_path)
+    monkeypatch.setattr(module.platform, "system", lambda: "Linux")
+
+    assert module.sessions_root() == flatpak_sessions
+
+
+def test_linux_sessions_root_prefers_standard_path(tmp_path: Path, monkeypatch) -> None:
+    module = load_script_module()
+    standard_sessions = tmp_path / ".config" / "Claude" / "claude-code-sessions"
+    snap_sessions = (
+        tmp_path / "snap" / "claude" / "current" / ".config" / "Claude"
+        / "claude-code-sessions"
+    )
+    standard_sessions.mkdir(parents=True)
+    snap_sessions.mkdir(parents=True)
+
+    monkeypatch.setattr(module, "HOME", tmp_path)
+    monkeypatch.setattr(module.platform, "system", lambda: "Linux")
+
+    assert module.sessions_root() == standard_sessions
 
 
 def test_dry_run_identifies_stale_but_does_not_delete(tmp_path: Path) -> None:
